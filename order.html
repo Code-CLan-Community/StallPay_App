@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ButterMilk Order Form</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f8ffae, #43c6ac);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            max-width: 350px;
+            width: 100%;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            transform: scale(1.05);
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #444;
+        }
+        select, input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .btn {
+            background: #ff6f61;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            margin-top: 20px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background: #e05a4f;
+        }
+        #billAmount {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 22px;
+            color: #d9534f;
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 8px;
+            display: inline-block;
+            width: 100%;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var userName = localStorage.getItem("customerName") || "Guest";
+            document.getElementById("orderHeading").innerText = "Enjoy Your ButterMilk " + userName;
+        });
+
+        function calculateBill() {
+            var corianderQty = parseInt(document.getElementById("corianderQty").value) || 0;
+            var cuminQty = parseInt(document.getElementById("cuminQty").value) || 0;
+            var total = (corianderQty * 15) + (cuminQty * 20);
+            document.getElementById("billAmount").innerText = "Final Bill Amount: " + total + " Rs";
+            return total;
+        }
+
+        function makePayment() {
+            var totalAmount = calculateBill();
+            if (totalAmount <= 0) {
+                alert("Please select at least one item to proceed with payment.");
+                return;
+            }
+            
+            var upiID = "7024876268@ptyes";  // Replace with your actual UPI ID
+            var paymentURL = `upi://pay?pa=ag9308332@oksbi&pn=AakashGupta&am=${totalAmount}&cu=INR`;
+
+            window.location.href = paymentURL;
+        }
+    </script>
+</head>
+<body>
+    <div class="card">
+        <h2 id="orderHeading">Select Quantity</h2>
+        <form id="buttermilkForm" oninput="calculateBill()" onsubmit="event.preventDefault(); makePayment();">
+            <label for="corianderQty">Coriander Mix - 15 Rs</label>
+            <input type="number" id="corianderQty" name="corianderQty" min="0" value="0">
+            <label for="cuminQty">Cumin & Black Pepper - 20 Rs</label>
+            <input type="number" id="cuminQty" name="cuminQty" min="0" value="0">
+            <p id="billAmount">Final Bill Amount: 0 Rs</p>
+            <button type="submit" class="btn">Place Order & Pay</button>
+        </form>
+    </div>
+</body>
+</html>
